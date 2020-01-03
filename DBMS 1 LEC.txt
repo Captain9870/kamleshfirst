@@ -1,0 +1,1190 @@
+connecting to the server first step ofsql on any computer 
+on cmd 
+
+note : to show the query what had done is SHOW CREATE table tablename;  it will show the query
+1) mysql -h localhost -u root 
+
+
+check all database
+
+2)show databases;
+
+3)CREATE DATABASE  dbms;//here dbms is a databse name 
+
+4)USE dbms //here we use database
+
+5)SHOW TABLES;// THIS CMD here need to show table
+
+6)FORCREATING TABLE SOME POINT IS NECESSARY :-
+	i) CONSTRAINTS/KEY
+
+	ii)PRIMARY KEY --> tablelvel ,column level
+	iii)foreign key --> table level
+	iv)unique --> column level
+	v) not null --> column level
+	vi)defalt --> column level
+
+7) Datatypes
+	1) numeric 
+	i) int (tinyint,smallint,mediumint,int,bigint)
+	ii)float
+	iii)double
+	iv)decimal(total number of digit,decimal places)
+	eg of decimal (5,2) it will give the result 999.99
+
+	2) characters
+	i) char
+	ii)varchar 
+	diffrence between char and varchar is that 
+	in char while assing a character 'char' use the 
+	whole byte assigned which wasted the remaing space it will affect the database
+
+	and in varchar while assing a character'varchar' uses only the required area 
+	and plus a null value ,rest of the space can be used in future
+
+
+	char is used when there are fixed caharacter eg pan card no ,aadharcard 
+
+	iii)text(tiny ,small,medium,text,big) 
+	iv) binary (it used binary storage)
+	v) blob (tiny,small,medium blob,big) 
+	vi)datetime(default is yyyy-mm-dd )
+
+
+--> table  Defination :-
+
+	CREATE TABLE tablename
+
+	(columnname datatype column_level_constraints,
+	,
+
+	,
+
+	constraint constraint(column name )); //table level constraint 
+
+**********************************************************************************************************
+
+*******************************CREATING TABLE *********************************** 
+	
+CREATE TABLE product( pid int primary key auto_increment,
+			prod_name varchar(50) not null,
+			qty int default 10,
+			price decimal(10,2),
+
+			description text);
+
+
+CREATE TABLE  sales( orderid char(5),
+			prodid int,
+			odate date,
+			qty int ,
+			total_amount decimal(10,2),
+			constraint primary key(orderid,prodid),
+			constraint foreign key(prodid) REFERENCES product(pid)
+			);
+			
+	
+DESC product(TABLE NAME )// it will describe the table
+SHOW CREATE TABLE product;// it show the query which you have done 
+
+
+**********************************************************************************************************************
+    DBMS 2ND LEC on 5/12/2019
+
+
+	CREATE TABLE customer(
+		id int primary key auto_increment,
+		name varchar(100),
+		email varchar(100) unique,
+		mobile bigint unique not null); // bigint is used to store mobile no starting with 9 series
+
+
+
+	CREATE TABLE student(
+		rollno int primary key,
+		name varchar(100) not null,
+		email varchar(100) unique,
+		city varchar(50) default 'Mumbai',
+		gender ENUM('M','F','T'),
+		hobbies SET('cricket','music','Reading ','surfing','Tracking'));
+		
+		// Enum is used to select single value  and it work same as a radio 
+		button in database and set is used select multiple value it work same as checkbox 
+
+
+
+
+**************************************************************ALTER KEY************************************************
+            
+    	ALTER TABLE tablename 
+
+	1) Add a column
+	
+	syntax: ALTER TABLE tablename
+		ADD COLUMN colname datatype constraint
+
+		example: 
+			alter table customer add column cid int; 
+			alter table sales add column cid int;
+	
+	2) add a column at particular position 
+		syntax:
+			ALTER TABLE tablename ADD COLUMN colname datatype constraint AFTER colname;
+
+		example:
+			alter table customer add column pancard char(10) not null AFTER name;
+			
+			// it will add a column at specific position you need 
+
+	3) remove column
+
+		syntax:
+			ALTER TABLE tablename DROP COLUMN colname;
+		example:
+			alter table customer drop column cid;
+
+			// it will remove the column you need
+
+
+
+	4) change a column
+	-> col name
+	-> datatype
+	-> add/remove CL(column level) constraint
+	
+		syntax:
+			ALTER TABLE tablename CHANGE oldcolname newcolname datatype constraint;
+
+		example : 
+			ALTER TABLE customer CHANGE name full_name varchar(150) not null;
+
+
+
+	5) add a table level constraint 
+
+		syntax: 
+			ALTER TABLE tablename ADD CONSTRAINT constraintname CONSTRAINT KEYWORD
+			(colname) REFERENCES tablename(colname);
+
+
+		example:
+			ALTER TABLE sales ADD CONSTRAINT sales_cust_fk FOREIGN KEY(cid)
+			REFERENCES customer(id);
+
+
+			// it will show foreign key in the database 
+
+		keys that automatically create index are as
+		--> unique 
+		--> primary
+		--> foreign
+		
+	6) drop table level constraint
+
+
+		syntax:
+			ALTER TABLE tablename DROP constraintkeyword name
+		example:
+			ALTER TABLE sales DROP FOREIGN KEY sales_cust_fk;
+			
+
+			// it will show the index of the table 
+
+				SHOW INDEX FROM tablename
+				SHOW INDEX FROM sales;
+
+			// it will drop index from the table
+
+			DROP INDEX KEY_NAME/INDEX _NAME ON tablename;
+
+			DROP INDEX sales_cust_fk ON sales;
+
+	7) rename a table
+		syntax :
+			ALTER TABLE tablename RENAME new_tablename;
+
+		example:
+			ALTER TABLE student RENAME stud_master;
+
+
+
+**************************************************************************DML**************************************************************************
+
+1) INSERT 
+	I) how to insert data in a particular column 
+		INSERT INTO tablename (column name list ) VALUES( value list);
+
+	example:
+		INSERT INTO stud_master (rollno, name) VALUES (1,'Supriya');
+
+		SELECT * FROM stud_master;
+
+	2) HOW TO INSERT DATA IN ALL COLUMN
+
+		SYNTAX:
+			INSERT INTO tablename VALUES (values list);
+
+		example:
+			INSERT INTO stud_master VALUES(2, 'ANIKET', 'aniket@gmail.com', 'Thane', 'Male', 'Gaming,Cricket'); 
+
+			INSERT INTO stud_master VALUES(3, 'AKSHAY', 'akshay@gmail.com', 'Thane', 'M', 'Reading,Cricket');
+		
+			INSERT INTO stud_master VALUES(4, 'ATUL', 'atul@gmail.com', 'Thane', 'M', 'music,Cricket');  
+		
+			INSERT INTO stud_master VALUES(5, 'YASH', 'yash@gmail.com', 'Thane', 'M', 'music,Cricket'); 
+		
+			INSERT INTO stud_master VALUES(6, 'PAWAN', 'pawan@gmail.com', 'Thane', 'M', 'music,Cricket'); // no space while insert the record 
+
+
+			select * from stud_master;
+
+	3) how to insert multiple record in table
+
+		syntax:
+			INSERT INTO stud_master (rollno, name) VALUES(7, 'Tushar'), (8, 'Mohit'), (9, 'Vedant'); // it will set only roll no and name and rest of the column will be null
+
+
+			INSERT INTO stud_master VALUES(10, 'ANIKET', 'aniket1@gmail.com', 'Thane', 'Male', 'Gaming,Cricket'),(11, 'AKSHAY', 'akshay1@gmail.com', 'Thane', 'M', 'Reading,Cricket'),
+			(12, 'ATUL', 'atul1@gmail.com', 'Thane', 'M', 'music,Cricket');
+
+
+
+
+
+
+			INSERT INTO sales VALUES('A1', 1, '2019-12-10', 2, 20.0, 1);// when the parent  table does not have entry then child table will no take in the sales table 
+									// we have one foreign key
+
+
+			INSERT INTO product (prod_name, qty, price) VALUES ('Maggi', 500, 10);// product table has it a foreign key in sales table when add in parent table 
+												// then only 
+
+
+
+
+
+2) UPDATE :
+
+		SYNTAX:
+			UPDATE tablename SET columnname=values;
+
+		example:
+			UPDATE stud_master SET city='Ulhasnagar'; // it will all the record of city column 
+
+			UPDATE stud_master SET gender='M' WHERE rollno=2; // it will change the record of one column when condition is given in where clause
+
+			UPDATE stud_master SET email='supriya@gmail.com', gender='F', hobbies='Reading,Music' WHERE rollno=1;//  record  change in multiple column 
+
+
+			UPDATE stud_master SET city='Thane' WHERE  name='Aniket';
+
+
+
+
+
+3) DELETE:
+
+		INSERT INTO product (prod_name, qty, price) VALUES (' Atta Maggi', 500, 10);
+
+		INSERT INTO product (prod_name, qty, price) VALUES ('Maggi', 500, 10);
+
+
+		INSERT INTO product (pid, prod_name, qty, price) VALUES (10, ' Yippe Noodle ', 500, 30);
+
+		INSERT INTO product (prod_name, qty, price) VALUES (' Ness cafe cofee ', 500, 80);
+		
+		INSERT INTO product (pid, prod_name, qty, price) VALUES (6,' Brue cofee ', 500, 70);
+
+		INSERT INTO product (prod_name, qty, price) VALUES ('Nor soup ', 500, 70);
+
+
+		DELETE FROM tablename WHERE
+		DELETE  FROM product WHERE pid=12;
+
+		DELETE FROM sales;
+
+		TRUNCATE sales;
+
+		SET FOREIGN_KEY_CHECKS=0;
+		TRUNCATE product;
+		SET FOREIGN_KEY_CHECKS=1;
+
+
+
+***********************************************************LECTURE ON 11-12-2019*************************************************
+PERFORMING ARITHMETIC OPERATION are +,
+
+		SELECT customerNumber,customerName,creditLimit,CreditLimit *1.07 from customers;
+
+putting alias mean giving column name
+
+		SELECT customerNumber,customerName,creditLimit,CreditLimit *1.07 as Bonus from customers;// if we will not put AS keyword it will work in same way as  
+													  using AS keyword
+
+TO FIND OUT UNIQUE VALUE IN DATABASE WE USE DISTINCT KEYWORD
+
+	example :
+			SELECT distinct jobTitle from employees;
+
+
+WHERE & RELATIONAL OPERTATOR
+	=,!=,>,<,>=,<=
+
+LOGICAL OPERATOR ARE (AND,OR,NOT)
+
+	1)	SELECT * FROM employees where officeCode=2;
+	2)  	select * from customers where country="USA";
+	3)  	select * from products where MSRP>=50 AND MSRP <=110;// HEIR WE HAVE USE LOGICAL OPERATOR
+
+	4) 	SELECT customerName,city,creditLimit  from customers where creditLimit >= 75000 and (city='Boston' or city='NYC' or city='Paris' or city='London');
+
+
+like predicate
+this predict have 2 meta character
+	% multiple character
+	_escap 1 character a
+
+
+
+******************************************************************LECTURE ON 17 DEC 2019*****************************************
+
+
+
+									DQL
+SELECT
+FROM
+	1) WHERE 
+	2)ORDER BY
+	3)LIMIT
+
+
+	Sort data
+ 		SELECT country,customerName  FROM customers order by country desc;
+		SELECT country,customerName  FROM customers order by country desc,customerName asc;
+
+
+
+
+	BUILT IN FUNCTION
+
+	1)SINGLE ROW FUNCTION 
+		I)MATH FUNCTION
+
+			//Absolute value is that when  ever you will put negative value it will alway give positive values
+				i)absolute value -abs
+
+
+				select abs(-12);
+				select abs(-45);
+				select abs(40);
+				select abs(-12.50);
+
+				ii)ceil  is making the value to the higher side eg if 12.04 we enter in sql it will give output as 13
+					select ceil(12.34);
+					select ceil(12.04);
+
+				iii) floor is  making the value to the lower side eg if 12.04 we enter in sql it will give output as 12	 
+					select floor(12.34);
+					select ceil(12.01);
+					select ceil(-12.01);
+
+				iv)modulus  it will give the remainder of the given number 
+					select mod(12,5);
+					select 12 mod 5;// it can be written in both the ways
+				v) round // 
+					select round(12.3456789,2);it will round the decimal place upto 2 value
+					select round(15.3456789,-1);it will round the unit to '0'and increase the ten's value by 1 if unit value=5 
+
+				vi) exp is exponential
+					select exp(10);	
+
+				vii) sqrt 
+					select sqrt(16);
+				viii) truncate 
+					select truncate(12.23456789,2);it will give only 2 decimal point and rest all delete
+					select truncate(12.23456789,-1);
+					select truncate(15.23456789,-1);
+
+				ix) power 
+					select pow(2,3);
+					select power(2,3);
+
+		II)STRING FUNCTION
+			1) concat
+				select concat('Good','morning');
+				select concat(firstName,"",lastName) as "Full Name " from employees;
+
+			2) upper it will convert to upper case
+				select upper("atul pandey");
+				select upper (concat(firstName,"",lastName)) as  "FullNAME" from employee;
+
+			3) lower it will convert to lower case
+				select lower(''ITVEDANT) 
+
+			4) replace it will replace the word from the string 
+				syntax:
+					select replace(string,what to  replace,with what );
+				example:
+					select replace("Let us Learn ","Learn","Earn");
+
+			5) substr
+				select substr("Let us learn",2,5);
+
+			6) lenght
+				select length("Let us learn");
+				select char_length("Let us learn");
+
+
+		III)DATETIME FUNCTION
+
+			1)system date 
+				select curdate();
+				select now (); for server side it will give the datetime
+				select sysdate (); is for client side it will give the datetime
+
+			2) last_day
+				select last_day(curdate());
+
+			3)  get individual value
+				select year(now());
+				select month(now());
+				select day(now());
+
+			4) formatting of date:
+				date_format(date,format);
+				select date_format(now(),"%M %d %Y");	// it will give output in month in string and date and year in int value
+
+			5) datediff 
+				datediff(date,date);
+				select datediff(now(),'1987-10-05')/365;
+		
+
+		IV) COMPARISION FUNCTION
+			i)isnull(exp)
+				select isnull(NULL);
+				select isnull(10);
+			ii) coalesce(value1,value2,value3.......) // IT WILL DISPLAY TYHE VALUE WHERE NULL IS NOT PRESENT
+				select coalesce(NULL,NULL,12,NULL);
+				SELECT state,country,coalesce(state,country) from customer;
+				select coalesce(NULL,NULL,NULL,NULL);
+				select coalesce(1,NULL,12,NULL);
+
+			III) GRATEST LEAST
+
+				select gratest(12,23,45,7852,2568);
+				select least(12,23,45,7852,2568); 
+
+			iv) if(condition,truedowhat,falsedowhat)
+				set @n = 10; // heir @ is use to indicate variable
+				select if (@n>0,"positive","Negative");
+				set @n = -10;
+				select if (@n>0,"positive","Negative");
+
+
+
+*********************************************************************task************************************************************
+
+display customerName, creditLimit, Status level such that status level if formed on basis of credit limit 
+		creditLimit > 80000 - platium
+		creditLimit in range 60000 to 80000 Gold
+		creditLimit in range 40000 to 60000 Silver
+		creditLimit in range 1 to 40000  Bronze
+		creditLimit 0- NA
+
+	select CustomerName ,CreditLimit, if(creditLimit >=80000,"Platinum",if (creditLimit between 60000 and 80000,"Gold",if (creditLimit between 40000 and 60000,"Silver",if (creditLimit =0,"NA","Bronze")))) as "Status Level" from customers;			
+*******************************************************************************************************************************************************************
+	2) MULTIPLE ROW FUNCTION
+		I)AGGREGATE/GROUP FUNCTION means multiple row function or group function
+
+
+			i)min
+			ii)max
+			iii) count
+			iv) sum
+			v) avg
+
+
+	select count(*),min(MSRP),Max(MSRP),avg(MSRP) from products;
+
+--> Display office wise employee count 
+		select officecode,count(*) from employees;
+
+**************************************************GROUP BY CLAUSE*****************************************
+
+		SELECT officecode,count(*) from employees group by officecode; // group byclause is used to show all the record in group   
+
+
+-> Display employee wise customer count
+
+	select salesRepEmployeeNumber,count(customerNumber) 
+	from customers 
+	group by salesRepEmployeeNumber;
+
+--> Display employeewise customer count  remove the record having employeeNumber as NUll
+	select salesRepEmployeeNumber,count(customerNumber) 
+	from customers  
+	WHERE  salesRepEmployeeNumber is not null
+	 group by salesRepEmployeeNumber;
+
+*************************************HAVING CLAUSE*********************************************************
+--> Display  employeewise customer count such that count is greater than 5 and also remove the record having employeeNumber as null
+
+	select salesRepEmployeeNumber,count(customerNumber) from customers  
+	WHERE  salesRepEmployeeNumber is not null 
+	 group by salesRepEmployeeNumber
+	 HAVING count(customerNumber) > 5;
+
+
+
+
+***********************************************PRACTICE QUESTION***************************
+
+
+--> DISPLAY ALL THE CUSTOMER  WITH NO SALES REPRESENTATIVE AND THEY BELOG TO EITHER SINGAPORE OR FRANKFURT
+		select salesRepEmployeeNumber,customerName,city from customers where salesRepEmployeeNumber is  null and city in ("Singapore","Frankfurt");
+
+
+--> DISPLAY THE EMPLOYEE DETAIL IN THE FOLLOWING FORMAT DIANE MURPHY WORK AS PRESIDENT
+
+	select concat(firstName,"",lastName,"work as ",jobTitle) as Msg from employees;
+
+--> DISPLAY orderdate,requiredate and shippedDate from order table in the following format "22nd Dec,2019"
+		select  date_format(orderDate,"%D %b,Y") orderDate,
+		date_format(requiredDate,"%D %b,%Y")requiredDate,
+		date_format( shippedDate,"%D %b,%Y") shippedDate 
+		from orders;
+			// it will give the result in this format 22nd dec 2019
+
+--> Display customerWise annual payment received
+		select customerNumber,year(paymentDate),sum(amount) from payments
+		GROUP BY year(paymentDate),customerNumber
+		ORDER BY (paymentDate);
+		// it will give the result of every year of
+
+
+--> Display productwise odercount for the year 2003
+
+
+
+***************************************************************SUBQUERY**********************************
+
+select officeCode from offices where city="paris";
+
+
+
+select employeenumber,firstname,lastname from employees where officecode=4;
+
+	select employeeNumber,firstname,lastName from employees 
+	where officecode=(select officeCode  from offices where city="paris");// in this it first execute the first bracket query then the outer query
+
+
+
+			Sub queey are of two type 
+				i) single row  symbol is =
+				ii) multiple row  symbol is  IN and (ANY & ALL are use in rare case)
+
+
+
+				-->ANY
+
+					->  > ANY - greater than minimum value in the result
+					->  < ANY - less than maximum value in the result
+
+				--> ALL
+					-> > ALL - greater than maximum value in the result
+					-> < ALL less than minimum value in the result
+
+ 
+
+select officecode from offices where country="usa";
+
+	select employeeNumber,firstname,lastName from employees 
+	where officecode  IN (select officeCode  from offices where country ="USA");
+
+--> Display all the customername handle by pamela
+
+
+	select  customerName  from customers 
+	where  salesRepEmployeeNumber=(select employeeNumber from employees where firstName ="pamela");
+
+     
+
+
+
+--> Display all the customername handle by steve having creditLimit more than  60000
+
+	select  customerName  from customers
+	 where  salesRepEmployeeNumber=(select employeeNumber from employees where firstName ="steve" and creditLimit > 60000);
+
+
+--> Display all the product that have been purchase by pamela's customer
+
+	important point for subquery alway start with with down word so that it become easy 
+	select productName,productLine from products where productCode IN
+	(select distinct productCode from orderDetail where productCode IN
+	(select distinct oderNumber from orders where customerNumber IN
+	(select customerNumber from customers where SaleRepEmployeeNumber =	
+	(select employeeNumber from employee where firstName="Pamela"))));
+
+
+
+
+
+--> Display all the employee full name whose customer belong to france or gemany or Australia and have ordered either planes or motorcycles
+
+	select concat(firstName," ",lastName) as "full name" from employees where employeeNumber IN 
+	(select distinct SalesRepEmployeeNumber from  customers where customerNumber IN 
+	(select distinct customerNumber from orders where orderNumber IN
+	(select orderNumber from orderDetail where productCode IN 
+	(select productCode from product where productline IN ("Planes",MotorCycle)))) and country IN ("France","Germany"));
+
+--> Display the CustomerName  with highest average order
+
+
+
+-->> display all customer who are handle by pamela and steve and those customer have order classic cars and vintage cars
+	select customerName from customers where customerNumber IN 
+	(select customerNumber  from orders where orderNumber IN
+	(select  distinct orderNumber from orderDetails where productCode IN
+	(select productCode from products where productLine IN("Classic Cars","Vintage Cars ")))) 
+	and 
+       salesRepEmployeeNumber IN (select employeeNumber from employees where firstName IN ("steve","pamela"));
+
+
+
+--> Display City ,count of customer  	 who have CreditLimit > 0
+		
+		select city ,count(*) from customers group by city;
+		select city ,count(*) from customers where creditLimit  > 0 group by city;
+		
+
+		this can be done by join query
+		select a.city, b.cnt as count , a.cnt as count_with_cl FROM 
+		(select city ,count(*)cnt from customers group by city )b,
+		(select city ,count(*)cnt from customers where creditLimit > 0 group by city) a where  a.city =b.city order BY count; 
+
+
+
+--> Display all the customer who have creditLimit more than all the creditLimit of all customer from NYC
+
+		select customerName ,creditLimit from customers 
+		where creditLimit > ALL (select creditLimit from customers 
+		where city ="NYC");
+
+
+
+
+--> Display all the products having MSRP less than any Planes 
+	select productName,MSRP,productLine from products where MSRP < ANY 
+	(select MSRP from products where productline ="Planes")
+	and not productLine="Planes" order by MSRP;
+
+
+
+
+****************************************************************************JOIN*********************************
+ JOIN IS USED FOR MERGING 2 OR MORE TABLE TOGETHER
+RULE OF JOIN NO OF TABLE -1 MEAN WE HAVE 3 DATASET WHICH HAVE ONLY 2 CONDITION
+WE HAVE 2 JOIN 
+1) EQUI JOIN 
+2)INNER JOIN
+
+
+************************************************EQUI JOIN*******************
+--> DISPLAY EMPLOYEE DETAILS ALONG WITH THEIR WORK LOCATION 
+	SELECT firstName,lastName ,City
+	FROM employees,offices
+	WHERE employees.oficeCode=offices.officeCode;
+
+
+
+// here we have given alias to the table name
+SELECT firstName,lastName ,City
+	FROM employees e,offices o
+	WHERE e.officeCode=o.officeCode;
+
+
+-----------------------------------------------CROSS JOIN----------------------
+
+cross join are not use but use in interview 
+table 1 rows  * table 2 row
+
+select firstName ,city
+from employees,offices;
+
+2nd technique
+select firstName city
+from employees CROSS JOIN offices;
+
+3rd technique
+select firstName,city
+from employees JOIN offices;
+
+
+
+-------------------------JOIN KEYWORD---------------------------------
+
+	--> ON Clause is used when column Name are different in both the Table
+	--> USING Clause is used When Column Name arre same in both the table
+
+example of USING CLAUSE
+	select firstName, city
+	FROM employees JOIN offices
+	USING (officeCode);
+
+example of ON Clause
+	select customerName,firstName
+	from customers JOIN employees
+	ON salesRepEmployeeNumber = employeeNumber;
+
+
+
+
+
+
+
+**************************************PRACTICE QUESTION OF JOIN QUERY************************************
+
+	1) 
+
+
+	1)Display CustomerName who has same sales rep as mini auto werke and have creditLimit more than 75000
+	
+	--> select customerName from customers 
+	    where creditLimit >75000 and 
+	    salesrepEmployeeNumber=(select salesRepEmployeeNumber from 
+	    customers where customerName='Mini Auto werke');
+
+			
+	2) Display customerwise receivable amount and received amount
+	
+	--> select  c.customerName, sum(od.priceEach*od.quantityOrdered)as
+	Receivable,sum(p.amount) as Received,
+	sum(od.priceEach*od.quantityOrdered)-sum(p.amount) Collectables
+	from customers c,orderdetails od ,orders o ,payments p
+	where c.customerNumber=p.customerNumber and 
+	o.customerNumber=c.customerNumber and
+	o.orderNumber=od.orderNumber
+	group by c.customerName;
+
+
+
+
+	create view customerPaymentDetails
+		as
+	select  c.customerName, sum(od.priceEach*od.quantityOrdered)as
+	Receivable,sum(p.amount) as Received,
+	sum(od.priceEach*od.quantityOrdered)-sum(p.amount) Collectables
+	from customers c,orderdetails od ,orders o ,payments p
+	where c.customerNumber=p.customerNumber and 
+	o.customerNumber=c.customerNumber and
+	o.orderNumber=od.orderNumber
+	group by c.customerName;
+
+
+       select *,Receivable-Received as Collectable from customerpaymentdetails;
+
+
+
+
+
+
+
+	Display customerName sales Report for all year for customer handles by pamela 
+
+
+
+
+	select c.*,o.*,ord.*,od.*,p.*,e.*,py.*
+	from customers c,offices o,orders ord, orderdetails od,products p,
+	employees e,payments py
+	where c.customerNumber=py.customerNumber and
+	c.customerNumber=ord.customerNumber and 
+	o.officecode=e.officeCode and
+	ord.orderNumber=od.orderNumber and 
+	p.productCode=od.productCode and
+	e.employeeNumber=c.salesRepEmployeeNumber;
+
+
+
+
+
+
+      create view  salesreport as 
+	select c.customerNumber,c.customerName,c.contactLastName,c.contactFirstName,
+	c.city as ccity,c.state as cstate,c.country as ccountry,c.creditLimit,
+	o.officeCode,o.city as ocity,o.state as ostate,o.country ocountry,
+	e.employeeNumber,e.firstName,e.lastName,
+	ord.orderNUmber,ord.orderdate,ord.requiredDate,ord.shippedDate,ord.status,
+	od.productCode,od.priceEach,od.quantityOrdered,
+	p.productName,p.productLine,py.paymentDate,py.amount
+	from customers c,offices o,orders ord, orderdetails od,products p,
+	employees e,payments py
+	where c.customerNumber=py.customerNumber and
+	c.customerNumber=ord.customerNumber and 
+	o.officecode=e.officeCode and
+	ord.orderNumber=od.orderNumber and 
+	p.productCode=od.productCode and
+	e.employeeNumber=c.salesRepEmployeeNumber;
+
+
+	select concat(firstName,'',lastName) as fullName, 
+	sum(quantityOrdered*priceEach)as TotalSales4 from salesReport
+	group by fullName;
+
+
+
+
+	Select concat(firstName,'',lastName) as FullName, 
+	sum(quantityOrdered*priceEach) as TotalSales
+	from salesReport where year(orderDate)=2003
+	group by fullName
+	order by TotalSales desc;
+
+
+
+
+
+
+
+***************************************DCL***************************************************************************
+
+1)insert
+2)update
+3)delete
+4)create
+5)alter
+6)truncate
+7)select
+8) all
+9)grant option9
+
+
+syntax for create username and password in dcl
+
+
+syntax:
+		CREATE USER username@hostname identified by 'password';
+
+example:
+		CREATE USER atul1987@localhost identified by 'Atul1987#';
+
+
+########################GRANTING PERMISSION ####################################################
+
+syntax:
+	 GRANT priviledges ON databasename.tablename To username@hostname;
+
+		dbms.employees // give the permission to one table 
+		dbms.*    // give the permoission to all table 
+		*.*    	// give permission to all database and all tables
+
+Example:
+	GRANT select ON dbms.employees TO atul1987@localhost;
+
+	GRANT ALL ON dbms.* TO atul1987@localhost;
+
+*******************************Revoke Permiossion *****************************
+
+Syntax : 
+	Revoke priviledges ON databasename.tablename from username@hostname;
+
+
+example : 
+
+	REVOKE ALL ON dbms.* from atul1987@localhost; // it will revoke all permision has give 
+
+	REVOKE select on dbms.employees from atul1987@localhost;
+
+**********************************Alter keyword***********************************
+
+update passwor with ALTER KEYWORD
+syntax:
+
+	ALTER user username@hostname identified by 'new password'     /// 
+
+example:
+		ALTER user atul1987@localhost identified by 'Atul1987@';
+
+
+*****************************************Misllenious***********************************************
+
+Syntax:
+	CREATE OR REPLACE PROCEDURE procedurename(parameter)
+
+	// creating a block
+	
+	BEGIN   // means to start with this keyword
+
+	// create a variable without any value
+	DECLARE varname datatype;
+	
+	// create a vai=riable with a value
+	DECLARE varname datatype DEFAULT value;
+
+	// Assign a value 
+	SET varname =value;
+
+	// pick value from select query and assign it to variable 
+	
+	syntax:
+		SELECT columnname INTO varname FROM tablename WHERE condition 
+
+	Example:
+		DECLARE  ocode int;
+		SELECT officecode INTO ocode FROM employees WHERE firstName='pamela';
+
+
+
+	// condition
+	
+		syntax:
+			IF condition THEN  //IF condition is started
+			statement
+			ELSEIF condition THEN
+			statement
+			ELSE
+			statement 
+			END IF     // End of if condition
+
+
+
+
+
+
+
+
+		// while loop
+		//repeat untill
+		//only loop
+
+	END;   // IT is end of begin 
+
+type of paraameter in procedure :
+	IN varname datatype // this parameter will take input and nothing else
+	OUT  varname datatype // this parameter will give output 
+	INOUT varname datatype // this parameter will take input and give the outpu
+
+
+
+write a procedure  to accept a number and say if it even or odd
+
+
+
+
+	CREATE OR REPLACE PROCEDURE evenodd(IN no int)
+	BEGIN
+		IF no%2=0 THEN
+			SELECT"EVEN NUmber " as message;
+		ELSE
+			SELECT "odd Number" as message ;
+		
+		END IF;
+	END
+
+
+
+************** TO chaneg the line terminator as in sql ';' is used to terminate the line heir we can change it by using DELIMITER
+
+	DELIMITER #
+
+
+
+ 		how to execute a procedure 
+	syntax:
+		CALL procedurename (parameter)
+
+
+	Example :
+			call evenodd(12)#
+
+			call evenodd(17)#
+
+
+
+CREATE  OR REPLACE PROCEDURE evenodd1(IN no int,OUT msg varchar(30))
+BEGIN
+	IF no%2=0 THEN
+		SET msg="EVEN Number";
+	ELSE
+		SET msg="odd Number";
+	END IF;
+END;
+ 
+call evenodd1(12,@msg)#
+
+select @msg#
+
+
+
+
+**************************************TASK************************************
+
+write a procedure to accept one number and return the value if it is positive ,negative or zero
+
+CREATE OR REPLACE PROCEDURE posneg(IN no int)
+BEGIN
+	IF no>0 THEN
+		SELECT 'positive' as message;
+	ELSEIF no < 0 THEN 
+		SELECT 'Negative' as message;
+	ELSE 
+		SELECT 'Zero' as message ;
+	END IF;
+END;
+
+
+
+
+Syntax :
+ WHILE condition DO
+	Statement
+END WHILE 
+	
+
+	Write a procedure that will return all number divisible by 3 between  2 to 25
+
+	CREATE OR REPLACE PROCEDURE divisibleby3(OUT str varchar (300))
+	BEGIN 
+		DECLARE x int DEFAULT 2;
+		SET str ="";
+		WHILE x <= 25 DO
+			IF x%3=0 THEN 
+				SET str = concat(str,x,",");
+			END IF;
+			SET x = x+1;
+		END WHILE ;
+	END;
+
+call divisibleby3(@str)#
+SELECT @str#
+--------------------------------------------------------------------------------------------------------------------------------------------
+positive prime
+Write  a program to input a number and display if it is prime number or not 
+
+
+CREATE OR REPLACE PROCEDURE primeno(IN no int,out msg varchar(100))
+BEGIN
+
+	DECLARE x INT DEFAULT 2;
+	DECLARE flag int DEFAULT 0;
+	pri: WHILE x < no DO
+		IF no%x=0 THEN
+			SET flag=1;
+			LEAVE pri;
+		END IF;
+		SET x=x+1;
+	END WHILE;
+	IF flag=0 THEN
+		set msg ="prime";
+	ELSE
+		set msg ="Not prime";
+	END IF;
+END;
+	 
+		
+
+OUT PUT:
+call primeno(23,@msg)#
+SELECT @msg#
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+using function for  Prime no 
+
+Syntax:
+	create function
+	CREATE OR REPLACE FUNCTION functionname(parameters)
+	RETURNS datatype
+	NOT/DETERMINISTIC
+	BEGIN
+		RETURN something;
+	END;
+  
+
+
+CREATE OR REPLACE FUNCTION primenos(no int)
+RETURNS varchar(20) DETERMINISTIC
+
+BEGIN
+	DECLARE x int DEFAULT 1;
+	DECLARE ctr int DEFAULT 0;
+	WHILE x <= no DO
+		IF no%x=0 THEN 
+			SET ctr=ctr+1;
+		END IF;
+		SET x=x+1;
+	END WHILE;
+	IF ctr > 2 THEN
+		return "Not prime";
+	ELSE
+		RETURN"prime";
+	END IF;
+
+END;
+
+----------------------------------------------------------------------------------------------------------
+innterview quetion 
+diffrence between function and prode
+
+function  is uncompiled piece of code  when a function get compiled at first it stores the working with result in cache memory so it takes almost no time 
+   while used during next time 
+--> return only one value 
+-->return is compulsory
+-->mostly used when working on group data
+
+
+
+procedure : it is compiled piece of code 
+--> call is used to get the result
+-->can return multiple values 
+return is optional    
+
+
+
+
+
+
+
+
+
+
+
+the diffrence between while loop and repeat untill is
+
+------> while : while will run untill the condition should me True  for execution 
+
+
+----> repeat: repeat will run untill the condition is false for execition
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+repeat : herethe process continue till the condition is false for execution the moment it encounter a true condition it exist the loop
+
+syntax:
+ REPEAT
+	DO SOMETHINGS
+
+UNTILL CONDITION 
+END REPEAT;
+
+code:
+	CREATE OR REPLACE PROCEDURE numbers(OUT str varchar(30))
+	BEGIN
+	DECLARE x int DEFAULT 1;
+	SET str="";
+	REPEAT
+		set str=concat(str,x,",");
+		set x=x+1;
+	UNTIL x > 5
+	END REPEAT;
+	END;
+	
+		
+CALL numbers(@msg)#
+
+
